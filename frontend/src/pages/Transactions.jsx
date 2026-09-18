@@ -77,6 +77,33 @@ export const Transactions = () => {
   const endIdx = Math.min(startIdx + pageSize, filtered.length);
   const paginatedItems = filtered.slice(startIdx, endIdx);
 
+  // Helper to generate dynamic page number list with ellipsis
+  const getPageNumbers = () => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const pages = [];
+    pages.push(1);
+
+    if (currentPage > 3) {
+      pages.push('...');
+    }
+
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (currentPage < totalPages - 2) {
+      pages.push('...');
+    }
+
+    pages.push(totalPages);
+    return pages;
+  };
+
   return (
     <div className="space-y-6 pb-8">
       {/* Header Title */}
@@ -154,6 +181,7 @@ export const Transactions = () => {
               className="glass-input text-xs rounded-xl px-3 py-1.5 border border-slate-800 focus:border-cyan-500 text-slate-200 bg-slate-900 cursor-pointer"
             >
               <option value={10}>10</option>
+              <option value={15}>15</option>
               <option value={25}>25</option>
               <option value={50}>50</option>
               <option value={100}>100</option>
@@ -244,7 +272,7 @@ export const Transactions = () => {
                 /* Empty State */
                 <tr>
                   <td colSpan="6" className="py-8 text-center text-slate-500 font-sans text-xs">
-                    No transactions found.
+                    No transactions found matching criteria.
                   </td>
                 </tr>
               )}
@@ -252,27 +280,71 @@ export const Transactions = () => {
           </table>
         </div>
 
-        {/* Pagination Controls */}
-        <div className="p-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+        {/* Dynamic Page 1, Page 2 ... Pagination Controls */}
+        <div className="p-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-400">
           <span>
             Showing <strong className="text-white">{filtered.length > 0 ? startIdx + 1 : 0}–{endIdx}</strong> of <strong className="text-white">{filtered.length.toLocaleString()}</strong> transactions
           </span>
-          <div className="flex items-center gap-2">
+          
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Prev Button */}
             <button 
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="p-1.5 rounded-lg glass-card text-slate-400 hover:text-white disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+              className="px-2.5 py-1.5 rounded-xl glass-card border border-slate-800 text-slate-400 hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed flex items-center gap-1 font-medium transition-colors"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 h-3.5" />
+              <span>Prev</span>
             </button>
-            <span className="font-mono text-slate-300">Page {currentPage} of {totalPages}</span>
+
+            {/* Numeric Page Buttons (Page 1, Page 2, Page 3 ...) */}
+            <div className="flex items-center gap-1 font-mono">
+              {getPageNumbers().map((page, idx) => (
+                page === '...' ? (
+                  <span key={`ellipsis-${idx}`} className="px-1.5 text-slate-600 select-none">...</span>
+                ) : (
+                  <button
+                    key={`page-${page}`}
+                    onClick={() => setCurrentPage(page)}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      currentPage === page
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-500/20 border border-cyan-400/50 scale-105'
+                        : 'glass-card border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                )
+              ))}
+            </div>
+
+            {/* Next Button */}
             <button 
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="p-1.5 rounded-lg glass-card text-slate-400 hover:text-white disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+              className="px-2.5 py-1.5 rounded-xl glass-card border border-slate-800 text-slate-400 hover:text-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed flex items-center gap-1 font-medium transition-colors"
             >
-              <ChevronRight className="w-4 h-4" />
+              <span>Next</span>
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
+
+            {/* Quick Page Jump Input */}
+            <div className="flex items-center gap-1.5 ml-2 border-l border-slate-800 pl-3">
+              <span className="text-slate-500 text-[11px]">Go to:</span>
+              <input
+                type="number"
+                min="1"
+                max={totalPages}
+                value={currentPage}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value, 10);
+                  if (!isNaN(val) && val >= 1 && val <= totalPages) {
+                    setCurrentPage(val);
+                  }
+                }}
+                className="w-12 glass-input text-xs text-center rounded-lg px-1 py-1 border border-slate-800 text-cyan-400 font-mono focus:border-cyan-500 bg-slate-900"
+              />
+            </div>
           </div>
         </div>
       </div>
