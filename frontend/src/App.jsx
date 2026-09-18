@@ -7,6 +7,9 @@ import BehaviourAnalysis from './pages/BehaviourAnalysis';
 import RiskMonitor from './pages/RiskMonitor';
 import Alerts from './pages/Alerts';
 import Users from './pages/Users';
+import Analytics from './pages/Analytics';
+import Settings from './pages/Settings';
+import Help from './pages/Help';
 
 export function App() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -44,12 +47,9 @@ export function App() {
           {activeTab === 'risk-monitor' && <RiskMonitor onNewHighRiskAlert={handleNewHighRiskAlert} />}
           {activeTab === 'alerts' && <Alerts />}
           {activeTab === 'users' && <Users />}
-          {['analytics', 'settings', 'help'].includes(activeTab) && (
-            <div className="p-8 text-center glass-card rounded-2xl border border-slate-800">
-              <h2 className="text-xl font-bold text-white capitalize">{activeTab.replace('-', ' ')} View</h2>
-              <p className="text-xs text-slate-400 mt-2">Module active and ready for ML backend connection.</p>
-            </div>
-          )}
+          {activeTab === 'analytics' && <Analytics />}
+          {activeTab === 'settings' && <Settings />}
+          {activeTab === 'help' && <Help />}
         </main>
       </div>
     </div>
