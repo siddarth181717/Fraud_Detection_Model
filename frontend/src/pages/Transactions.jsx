@@ -13,6 +13,8 @@ export const Transactions = () => {
   const [riskFilter, setRiskFilter] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [sortBy, setSortBy] = useState('DEFAULT');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [selectedTxn, setSelectedTxn] = useState(null);
 
   useEffect(() => {
@@ -36,6 +38,11 @@ export const Transactions = () => {
 
     loadTxns();
   }, []);
+
+  // Reset to page 1 on filter/search change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, riskFilter, statusFilter, sortBy, pageSize]);
 
   // Filter Logic
   let filtered = txnList.filter((txn) => {
@@ -64,12 +71,18 @@ export const Transactions = () => {
     filtered.sort((a, b) => (a.riskScore || 0) - (b.riskScore || 0));
   }
 
+  // Pagination Math
+  const totalPages = Math.max(Math.ceil(filtered.length / pageSize), 1);
+  const startIdx = (currentPage - 1) * pageSize;
+  const endIdx = Math.min(startIdx + pageSize, filtered.length);
+  const paginatedItems = filtered.slice(startIdx, endIdx);
+
   return (
     <div className="space-y-6 pb-8">
       {/* Header Title */}
       <div>
         <h1 className="text-xl font-bold text-white tracking-tight">TRANSACTIONS</h1>
-        <p className="text-xs text-slate-400 mt-0.5">Filter, search, and inspect individual transaction behaviour.</p>
+        <p className="text-xs text-slate-400 mt-0.5">Filter, search, and inspect individual transaction behaviour across dataset.</p>
       </div>
 
       {/* Control Filters Bar */}
@@ -131,6 +144,21 @@ export const Transactions = () => {
               <option value="AMOUNT_HIGH">Highest Amount First</option>
             </select>
           </div>
+
+          {/* Rows Per Page */}
+          <div className="flex items-center gap-1.5 text-xs text-slate-400">
+            <span>Per Page:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              className="glass-input text-xs rounded-xl px-3 py-1.5 border border-slate-800 focus:border-cyan-500 text-slate-200 bg-slate-900 cursor-pointer"
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -138,7 +166,7 @@ export const Transactions = () => {
       {loading && (
         <div className="p-3 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 text-xs flex items-center justify-center gap-2 font-mono">
           <RefreshCw className="w-4 h-4 animate-spin" />
-          Loading transactions from FastAPI / Supabase...
+          Loading transactions from FastAPI / Database...
         </div>
       )}
 
@@ -167,8 +195,8 @@ export const Transactions = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60 font-mono">
-              {filtered.length > 0 ? (
-                filtered.map((txn, idx) => {
+              {paginatedItems.length > 0 ? (
+                paginatedItems.map((txn, idx) => {
                   const score = txn.riskScore ?? txn.risk_score ?? 10;
                   const isHigh = score >= 71 || (txn.riskLevel || '').toUpperCase() === 'HIGH';
                   const isMedium = (score >= 31 && score < 71) || (txn.riskLevel || '').toUpperCase() === 'MEDIUM';
@@ -226,13 +254,23 @@ export const Transactions = () => {
 
         {/* Pagination Controls */}
         <div className="p-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-          <span>Showing <strong className="text-white">{filtered.length}</strong> transactions</span>
+          <span>
+            Showing <strong className="text-white">{filtered.length > 0 ? startIdx + 1 : 0}–{endIdx}</strong> of <strong className="text-white">{filtered.length.toLocaleString()}</strong> transactions
+          </span>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 rounded-lg glass-card text-slate-400 hover:text-white disabled:opacity-50">
+            <button 
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="p-1.5 rounded-lg glass-card text-slate-400 hover:text-white disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+            >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="font-mono text-slate-300">Page 1 of 1</span>
-            <button className="p-1.5 rounded-lg glass-card text-slate-400 hover:text-white disabled:opacity-50">
+            <span className="font-mono text-slate-300">Page {currentPage} of {totalPages}</span>
+            <button 
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="p-1.5 rounded-lg glass-card text-slate-400 hover:text-white disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+            >
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>

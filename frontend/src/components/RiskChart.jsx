@@ -3,9 +3,15 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell 
 } from 'recharts';
-import { risk7DayTrendData, riskDonutData } from '../data/mockData';
+import { risk7DayTrendData as fallbackTrendData, riskDonutData as fallbackDonutData } from '../data/mockData';
 
-export const RiskChart = () => {
+export const RiskChart = ({ trendData, donutData }) => {
+  const chartTrend = trendData && trendData.length > 0 ? trendData : fallbackTrendData;
+  const chartDonut = donutData && donutData.length > 0 ? donutData : fallbackDonutData;
+
+  const lowRiskItem = chartDonut.find(item => item.name.toLowerCase().includes('low'));
+  const lowRiskPct = lowRiskItem ? lowRiskItem.value : 96.5;
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* 1. Transaction Risk Overview (7 Days Trend) */}
@@ -13,13 +19,13 @@ export const RiskChart = () => {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-base font-bold text-white tracking-tight">Transaction Risk Overview</h3>
-            <p className="text-xs text-slate-400">Low, Medium, and High Risk trend over the last 7 days</p>
+            <p className="text-xs text-slate-400">Low, Medium, and High Risk trend over operating period</p>
           </div>
         </div>
 
         <div className="h-64 w-full mt-2">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={risk7DayTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart data={chartTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="lowGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
@@ -74,13 +80,13 @@ export const RiskChart = () => {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={riskDonutData}
+                data={chartDonut}
                 innerRadius={60}
                 outerRadius={85}
                 paddingAngle={4}
                 dataKey="value"
               >
-                {riskDonutData.map((entry, index) => (
+                {chartDonut.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} stroke="rgba(15, 23, 42, 0.8)" strokeWidth={2} />
                 ))}
               </Pie>
@@ -91,13 +97,13 @@ export const RiskChart = () => {
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span className="text-2xl font-extrabold text-white">72%</span>
+            <span className="text-2xl font-extrabold text-white">{lowRiskPct}%</span>
             <span className="text-[10px] uppercase font-semibold text-emerald-400">Low Risk</span>
           </div>
         </div>
 
         <div className="space-y-2 pt-2 border-t border-slate-800/80 text-xs">
-          {riskDonutData.map((item) => (
+          {chartDonut.map((item) => (
             <div key={item.name} className="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }}></span>

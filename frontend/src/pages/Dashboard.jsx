@@ -18,12 +18,12 @@ export const Dashboard = () => {
       if (data) {
         setStats(data);
       } else {
-        // Fallback default structure matching Milestone 10.4
+        // Fallback default structure matching dataset (2,000 transactions)
         setStats({
-          totalTransactions: { title: 'Transactions', value: '12,482', change: '+12.4%', isPositive: true, subtext: 'Total processed' },
-          highRiskTransactions: { title: 'High Risk', value: '143', change: '+8.7%', isPositive: false, subtext: 'Flagged anomalies' },
-          avgRisk: { title: 'Avg Risk', value: '34.7', change: '-1.8 pts', isPositive: true, subtext: 'System Risk Index' },
-          alerts: { title: 'Alerts', value: '87', change: '+5', isPositive: false, subtext: 'Pending review' }
+          totalTransactions: { title: 'Transactions', value: '2,000', change: '+12.4%', isPositive: true, subtext: 'Total processed' },
+          highRiskTransactions: { title: 'High Risk', value: '63', change: '+8.7%', isPositive: false, subtext: 'Flagged anomalies' },
+          avgRisk: { title: 'Avg Risk', value: '10.1', change: '-1.8 pts', isPositive: true, subtext: 'System Risk Index' },
+          alerts: { title: 'Alerts', value: '63', change: '+5', isPositive: false, subtext: 'Pending review' }
         });
       }
     } catch (err) {
@@ -40,28 +40,28 @@ export const Dashboard = () => {
   const cardList = stats ? [
     {
       title: stats.totalTransactions?.title || 'Transactions',
-      value: stats.totalTransactions?.value || '12,482',
+      value: stats.totalTransactions?.value || '2,000',
       subtext: stats.totalTransactions?.subtext || 'Total processed',
       isPositive: stats.totalTransactions?.isPositive ?? true,
       color: 'cyan'
     },
     {
       title: stats.highRiskTransactions?.title || 'High Risk',
-      value: stats.highRiskTransactions?.value || '143',
+      value: stats.highRiskTransactions?.value || '63',
       subtext: stats.highRiskTransactions?.subtext || 'Flagged anomalies',
       isPositive: stats.highRiskTransactions?.isPositive ?? false,
       color: 'rose'
     },
     {
       title: stats.avgRisk?.title || 'Avg Risk',
-      value: stats.avgRisk?.value || '34.7',
+      value: stats.avgRisk?.value || '10.1',
       subtext: stats.avgRisk?.subtext || 'System Risk Index',
       isPositive: stats.avgRisk?.isPositive ?? true,
       color: 'amber'
     },
     {
       title: stats.alerts?.title || 'Alerts',
-      value: stats.alerts?.value || '87',
+      value: stats.alerts?.value || '63',
       subtext: stats.alerts?.subtext || 'Pending review',
       isPositive: stats.alerts?.isPositive ?? false,
       color: 'purple'
@@ -108,7 +108,10 @@ export const Dashboard = () => {
       </div>
 
       {/* Risk Overview & Donut Charts */}
-      <RiskChart />
+      <RiskChart 
+        donutData={stats?.riskDonutData}
+        trendData={stats?.risk7DayTrendData}
+      />
 
       {/* Transaction Table */}
       <TransactionTable />

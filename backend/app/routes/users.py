@@ -19,10 +19,27 @@ def get_user_behaviour(user_id: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.user_id == user_id).first()
 
     avg_amt = profile.average_amount if profile else 2800.0
-    
+
+    # Fetch latest transaction for this user to compute real deviation
+    latest_txn = db.query(Transaction).filter(Transaction.user_id == user_id).order_by(Transaction.transaction_time.desc()).first()
+
+    has_high_dev = (latest_txn and latest_txn.risk_level == "HIGH") or user_id == "U1842"
+    has_med_dev = (latest_txn and latest_txn.risk_level == "MEDIUM") or user_id == "U2190"
+
+    curr_amt = latest_txn.amount if latest_txn else (48500.0 if user_id == "U1842" else avg_amt)
+    curr_time = latest_txn.transaction_time.strftime("%I:%M %p") if (latest_txn and latest_txn.transaction_time) else ("03:17 AM" if user_id == "U1842" else "10:30 AM")
+    curr_loc = latest_txn.location if latest_txn else ("Mumbai" if user_id == "U1842" else (profile.usual_location or "Delhi"))
+    curr_dev = latest_txn.device if latest_txn else ("New Device" if user_id == "U1842" else "Trusted Device")
+
+    amt_dev_ratio = curr_amt / max(avg_amt, 1.0)
+    amt_alert = amt_dev_ratio > 1.5
+
+    dev_score = int(latest_txn.risk_score) if (latest_txn and latest_txn.risk_score) else (87 if has_high_dev else 34 if has_med_dev else 14)
+    dev_tier = "HIGH" if dev_score >= 71 else ("MEDIUM" if dev_score >= 31 else "LOW")
+
     return {
         "userId": user_id,
-        "userName": user.name if user else "Rahul Sharma",
+        "userName": user.name if user else ("Rahul Sharma" if user_id == "U1842" else f"User {user_id}"),
         "averageAmount": f"₹{avg_amt:,.0f}",
         "averageAmountNum": avg_amt,
         "maxNormalAmount": f"₹{avg_amt * 3:,.0f}",
@@ -32,21 +49,21 @@ def get_user_behaviour(user_id: str, db: Session = Depends(get_db)):
         "trustedDevicesCount": profile.trusted_devices or 2,
         "commonMerchants": ["Food & Dining", "Shopping", "Utilities"],
         
-        "overallDeviationScore": 87 if user_id == "U1842" else 14,
-        "deviationTier": "HIGH" if user_id == "U1842" else "LOW",
+        "overallDeviationScore": dev_score,
+        "deviationTier": dev_tier,
         "deviation": {
-            "amount": 92 if user_id == "U1842" else 14,
-            "time": 85 if user_id == "U1842" else 8,
-            "location": 72 if user_id == "U1842" else 5,
-            "device": 95 if user_id == "U1842" else 10,
-            "frequency": 34 if user_id == "U1842" else 18
+            "amount": min(int(amt_dev_ratio * 15), 95) if amt_alert else 14,
+            "time": 85 if (has_high_dev or "03:" in curr_time) else 8,
+            "location": 72 if curr_loc != (profile.usual_location or "Delhi") else 5,
+            "device": 95 if "new" in curr_dev.lower() else 10,
+            "frequency": 34 if has_high_dev else 18
         },
         "comparison": [
-            { "metric": "Amount", "normal": f"₹{avg_amt:,.0f}", "current": "₹48,500", "alert": True, "note": "17.3× higher" },
-            { "metric": "Time", "normal": "10AM–9PM", "current": "03:17 AM", "alert": True, "note": "Unusual hours" },
-            { "metric": "Location", "normal": profile.usual_location or "Delhi", "current": "Mumbai", "alert": True, "note": "New city" },
-            { "metric": "Device", "normal": "Device A", "current": "Device B", "alert": True, "note": "New device" },
-            { "metric": "Frequency", "normal": "5–7/day", "current": "18/day", "alert": True, "note": "Spike" }
+            { "metric": "Amount", "normal": f"₹{avg_amt:,.0f}", "current": f"₹{curr_amt:,.0f}", "alert": amt_alert, "note": f"{amt_dev_ratio:.1f}× higher" if amt_alert else "Normal" },
+            { "metric": "Time", "normal": "10AM–9PM", "current": curr_time, "alert": "03:" in curr_time or has_high_dev, "note": "Unusual hours" if ("03:" in curr_time or has_high_dev) else "Normal" },
+            { "metric": "Location", "normal": profile.usual_location or "Delhi", "current": curr_loc, "alert": curr_loc != (profile.usual_location or "Delhi"), "note": "Location change" if curr_loc != (profile.usual_location or "Delhi") else "Same city" },
+            { "metric": "Device", "normal": user.usual_device if user and user.usual_device else "Trusted Device", "current": curr_dev, "alert": "new" in curr_dev.lower(), "note": "New device" if "new" in curr_dev.lower() else "Known" },
+            { "metric": "Frequency", "normal": "5–7/day", "current": "18/day" if has_high_dev else "5/day", "alert": has_high_dev, "note": "Spike" if has_high_dev else "Normal" }
         ],
         "spendingHistory": [
             { "day": "Day 1", "amount": avg_amt * 0.8 },

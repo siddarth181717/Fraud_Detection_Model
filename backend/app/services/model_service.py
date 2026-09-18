@@ -7,7 +7,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from app.schemas.transaction import PredictionRequest, PredictionResponse
-from app.db.models import Transaction, BehaviourProfile, Alert
+from app.db.models import Transaction, BehaviourProfile, Alert, User
 
 # Path to trained model artifact from Milestone 5
 MODEL_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../ml/models/fraud_model.pkl"))
@@ -35,12 +35,13 @@ def predict_fraud_risk(req: PredictionRequest, db: Session) -> PredictionRespons
         req.amount = 0.0
     user_id = req.user_id if req.user_id and req.user_id.strip() else "U1842"
 
-    # 1. Fetch User Behaviour Profile from DB (or fallback baseline)
+    # 1. Fetch User & Behaviour Profile from DB (or fallback baseline)
     profile = db.query(BehaviourProfile).filter(BehaviourProfile.user_id == user_id).first()
+    user = db.query(User).filter(User.user_id == user_id).first()
     
     user_avg_amount = float(profile.average_amount) if profile and profile.average_amount else 2800.0
-    usual_location = profile.usual_location if profile and profile.usual_location else "Delhi"
-    usual_device = profile.usual_device if profile and profile.usual_device else "Trusted Device"
+    usual_location = profile.usual_location if profile and profile.usual_location else (user.usual_location if user and user.usual_location else "Delhi")
+    usual_device = user.usual_device if user and user.usual_device else "Trusted Device"
     usual_time_str = f"{profile.usual_time_start or '10:00 AM'} – {profile.usual_time_end or '09:00 PM'}" if profile else "10 AM – 9 PM"
     trusted_devices_count = profile.trusted_devices if profile and profile.trusted_devices else 2
     
@@ -51,10 +52,47 @@ def predict_fraud_risk(req: PredictionRequest, db: Session) -> PredictionRespons
     is_unusual_time = 1 if hour in [0, 1, 2, 3, 4, 5, 23] else 0
     
     location_change = 1 if req.location and req.location.lower().strip() != usual_location.lower().strip() else 0
-    device_change = 1 if req.device and ("new" in req.device.lower() or "proxy" in req.device.lower() or "vpn" in req.device.lower() or req.device.lower() != usual_device.lower()) else 0
+    device_change = 1 if req.device and ("new" in req.device.lower() or "proxy" in req.device.lower() or "vpn" in req.device.lower() or (req.device.lower().strip() != usual_device.lower().strip() and "trusted" not in req.device.lower())) else 0
 
     # 3. Model Inference & Risk Calibration
-    if amount_dev <= 1.2 and not is_unusual_time and not device_change and not location_change:
+    ml_prob = None
+    if model_artifact and 'model' in model_artifact:
+        try:
+            rf_model = model_artifact['model']
+            feature_cols = model_artifact['feature_cols']
+            
+            feat_row = {c: 0 for c in feature_cols}
+            feat_row['amount'] = req.amount
+            feat_row['amount_deviation'] = amount_dev
+            feat_row['amount_zscore'] = max(0.0, amount_dev - 1.0)
+            feat_row['hour'] = hour
+            feat_row['time_deviation'] = abs(hour - 14)
+            feat_row['is_unusual_time'] = is_unusual_time
+            feat_row['is_suspicious_beneficiary'] = 1 if req.beneficiary_id and 'susp' in req.beneficiary_id.lower() else 0
+            feat_row['user_txn_count'] = profile.average_daily_transactions if profile else 5
+            
+            cat_col = f"cat_{(req.merchant_category or 'electronics').lower()}"
+            if cat_col in feat_row:
+                feat_row[cat_col] = 1
+
+            input_df = pd.DataFrame([feat_row])[feature_cols]
+            ml_prob = float(rf_model.predict_proba(input_df)[0][1])
+        except Exception as e:
+            print(f"ML Model inference notice: {e}")
+            ml_prob = None
+
+    if ml_prob is not None:
+        # Calibrate ML Random Forest output (0.0 to 1.0) with behaviour deviation signals
+        ml_score = ml_prob * 100.0
+        device_penalty = 15.0 if device_change else 0.0
+        location_penalty = 10.0 if location_change else 0.0
+        
+        if amount_dev <= 1.2 and not is_unusual_time and not device_change and not location_change:
+            risk_score = min(max(round(ml_score * 0.35 + float(amount_dev * 3.0), 1), 5.0), 28.0)
+        else:
+            raw_score = (ml_score * 0.65) + device_penalty + location_penalty + (min(amount_dev, 10.0) * 0.8) + (10.0 if is_unusual_time else 0.0)
+            risk_score = min(max(round(raw_score, 1), 5.0), 96.0)
+    elif amount_dev <= 1.2 and not is_unusual_time and not device_change and not location_change:
         # Scenario 1: Clean Normal Transaction (Low Risk)
         risk_score = min(max(round(12.0 + float(amount_dev * 4.0), 1), 5.0), 28.0)
     elif device_change and location_change and amount_dev > 3.0:
