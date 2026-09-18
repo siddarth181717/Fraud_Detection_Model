@@ -39,7 +39,7 @@ export function App() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#FAF7F2] text-[#3D3328] font-sans selection:bg-[#D96B43] selection:text-white relative">
+    <div className="flex min-h-screen bg-[#F6F1E9] text-[#34291D] font-sans selection:bg-[#B58A43] selection:text-white relative">
       {/* Sidebar Navigation */}
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} alertCount={alertCount} />
 
@@ -58,9 +58,9 @@ export function App() {
           {activeTab === 'alerts' && <Alerts />}
           {activeTab === 'users' && <Users />}
           {['analytics', 'settings', 'help'].includes(activeTab) && (
-            <div className="p-10 text-center glass-card rounded-2xl border border-[#E8DEC9]">
-              <h2 className="text-xl font-extrabold text-[#251E17] capitalize">{activeTab.replace('-', ' ')} View</h2>
-              <p className="text-xs text-[#7F6F59] mt-2">Module active and connected with FraudGuard ML engine.</p>
+            <div className="p-10 text-center glass-card rounded-2xl border border-[#E6DEC8]">
+              <h2 className="text-xl font-extrabold text-[#231B12] capitalize">{activeTab.replace('-', ' ')} View</h2>
+              <p className="text-xs text-[#6E5C44] mt-2">Module active and connected with Nexus Shield ML engine.</p>
             </div>
           )}
         </main>

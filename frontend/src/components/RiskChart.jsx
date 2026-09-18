@@ -3,8 +3,16 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell 
 } from 'recharts';
-import { risk7DayTrendData, riskDonutData } from '../data/mockData';
+import { risk7DayTrendData as fallbackTrendData, riskDonutData as fallbackDonutData } from '../data/mockData';
 
+export const RiskChart = ({ trendData, donutData }) => {
+  const chartTrend = trendData && trendData.length > 0 ? trendData : fallbackTrendData;
+  const chartDonut = donutData && donutData.length > 0 ? donutData : fallbackDonutData;
+
+  const lowRiskItem = chartDonut.find(item => item.name.toLowerCase().includes('low'));
+  const lowRiskPct = lowRiskItem ? lowRiskItem.value : 96.5;
+
+<<<<<<< HEAD
 export const RiskChart = () => {
   const creamyDonutData = [
     { name: 'Low Risk', value: 72, color: '#3B7A57' },
@@ -12,20 +20,27 @@ export const RiskChart = () => {
     { name: 'High Risk', value: 9, color: '#C94A29' },
   ];
 
+=======
+>>>>>>> 91c65ae64af9e8d444be0e02820acc80d3fc6b2b
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-[#3D3328]">
       {/* 1. Transaction Risk Overview (7 Days Trend) */}
       <div className="lg:col-span-2 glass-card p-6 rounded-2xl border border-[#E8DEC9] flex flex-col justify-between bg-[#FFFDF9]">
         <div className="flex items-center justify-between mb-2">
           <div>
+<<<<<<< HEAD
             <h3 className="text-base font-extrabold text-[#251E17] tracking-tight">Transaction Risk Overview</h3>
             <p className="text-xs text-[#7F6F59]">Low, Medium, and High Risk trend over the last 7 days</p>
+=======
+            <h3 className="text-base font-bold text-white tracking-tight">Transaction Risk Overview</h3>
+            <p className="text-xs text-slate-400">Low, Medium, and High Risk trend over operating period</p>
+>>>>>>> 91c65ae64af9e8d444be0e02820acc80d3fc6b2b
           </div>
         </div>
 
         <div className="h-64 w-full mt-2">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={risk7DayTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart data={chartTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="lowGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#3B7A57" stopOpacity={0.35}/>
@@ -80,14 +95,23 @@ export const RiskChart = () => {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
+<<<<<<< HEAD
                 data={creamyDonutData}
+=======
+                data={chartDonut}
+>>>>>>> 91c65ae64af9e8d444be0e02820acc80d3fc6b2b
                 innerRadius={60}
                 outerRadius={85}
                 paddingAngle={4}
                 dataKey="value"
               >
+<<<<<<< HEAD
                 {creamyDonutData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} stroke="#FFFDF9" strokeWidth={3} />
+=======
+                {chartDonut.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} stroke="rgba(15, 23, 42, 0.8)" strokeWidth={2} />
+>>>>>>> 91c65ae64af9e8d444be0e02820acc80d3fc6b2b
                 ))}
               </Pie>
               <Tooltip 
@@ -97,6 +121,7 @@ export const RiskChart = () => {
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+<<<<<<< HEAD
             <span className="text-2xl font-extrabold text-[#251E17]">72%</span>
             <span className="text-[10px] uppercase font-bold text-[#3B7A57]">Low Risk</span>
           </div>
@@ -105,6 +130,16 @@ export const RiskChart = () => {
         <div className="space-y-2 pt-2 border-t border-[#EFE6D7] text-xs">
           {creamyDonutData.map((item) => (
             <div key={item.name} className="flex items-center justify-between p-2 rounded-xl bg-[#F6F0E5] border border-[#E2D5C2]">
+=======
+            <span className="text-2xl font-extrabold text-white">{lowRiskPct}%</span>
+            <span className="text-[10px] uppercase font-semibold text-emerald-400">Low Risk</span>
+          </div>
+        </div>
+
+        <div className="space-y-2 pt-2 border-t border-slate-800/80 text-xs">
+          {chartDonut.map((item) => (
+            <div key={item.name} className="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+>>>>>>> 91c65ae64af9e8d444be0e02820acc80d3fc6b2b
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }}></span>
                 <span className="text-[#3D3328] font-semibold">{item.name}</span>

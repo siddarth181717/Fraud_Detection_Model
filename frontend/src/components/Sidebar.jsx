@@ -59,7 +59,7 @@ export const Sidebar = ({ activeTab, setActiveTab, alertCount = 8 }) => {
               {!collapsed && (
                 <div className="flex items-center gap-1.5">
                   <span className="font-extrabold text-sm tracking-tight text-[#231B12] whitespace-nowrap">
-                    FRAUDGUARD <span className="text-[#B58A43]">AI</span>
+                    NEXUS <span className="text-[#B58A43]">SHIELD</span>
                   </span>
                   <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#EFE7DA] text-[#6E5C44] border border-[#DFD4BD]">
                     v2.4
