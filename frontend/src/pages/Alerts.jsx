@@ -19,7 +19,6 @@ export const Alerts = () => {
       if (data && data.length > 0) {
         setAlertsList(data);
       } else {
-        // Fallback demo alerts matching Milestone 10.6
         setAlertsList([
           {
             id: "TX1010",
@@ -108,29 +107,29 @@ export const Alerts = () => {
   });
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-6 pb-8 text-[#3D3328]">
       {/* Header Banner */}
-      <div className="p-6 rounded-2xl glass-card border border-rose-500/30 bg-gradient-to-r from-rose-950/20 via-slate-900 to-slate-900 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-6 rounded-2xl glass-card border border-[#F4C5B9] bg-gradient-to-r from-[#FDF0ED] via-[#FFFDF9] to-[#FFFDF9] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
+          <div className="p-3 rounded-xl bg-[#FDF0ED] text-[#C94A29] border border-[#F4C5B9]">
             <Bell className="w-6 h-6 animate-bounce" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Fraud Risk Alerts</h1>
-            <p className="text-xs text-slate-400">Security triage queue for flagged high-risk transaction anomalies.</p>
+            <h1 className="text-xl font-extrabold text-[#251E17] tracking-tight">Fraud Risk Alerts</h1>
+            <p className="text-xs text-[#7F6F59]">Security triage queue for flagged high-risk transaction anomalies.</p>
           </div>
         </div>
 
-        {/* Filter Tabs (Milestone 10.6) */}
-        <div className="flex flex-wrap items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800 text-xs font-mono">
+        {/* Filter Tabs */}
+        <div className="flex flex-wrap items-center gap-1.5 bg-[#F5EFE4] p-1.5 rounded-xl border border-[#E1D5C2] text-xs font-mono">
           {['ALL', 'HIGH', 'MEDIUM', 'LOW', 'UNRESOLVED'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
                 activeTab === tab
-                  ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-[#D96B43] text-white shadow-sm'
+                  : 'text-[#7F6F59] hover:text-[#251E17]'
               }`}
             >
               {tab === 'UNRESOLVED' ? 'Unresolved' : tab}
@@ -139,22 +138,20 @@ export const Alerts = () => {
         </div>
       </div>
 
-      {/* 10.8 — Loading State */}
       {loading && (
-        <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-cyan-300 text-xs flex items-center justify-center gap-2">
-          <RefreshCw className="w-4 h-4 animate-spin" />
+        <div className="p-4 rounded-2xl bg-[#FAF0EB] border border-[#E67B5E]/30 text-[#C5542E] text-xs flex items-center justify-center gap-2 font-mono">
+          <RefreshCw className="w-4 h-4 animate-spin text-[#D96B43]" />
           Fetching security alerts from database...
         </div>
       )}
 
-      {/* 10.8 — Error State */}
       {error && (
-        <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between">
+        <div className="p-4 rounded-2xl bg-[#FDF0ED] border border-[#F4C5B9] text-[#7A200B] text-xs flex items-center justify-between">
           <span className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4" />
+            <AlertCircle className="w-4 h-4 text-[#C94A29]" />
             {error}
           </span>
-          <button onClick={fetchAlertsData} className="px-3 py-1 rounded bg-rose-900/60 hover:bg-rose-800 text-xs text-white">
+          <button onClick={fetchAlertsData} className="px-3 py-1 rounded-xl bg-[#C94A29] hover:bg-[#A82C10] text-xs font-bold text-white">
             Retry
           </button>
         </div>
@@ -171,8 +168,7 @@ export const Alerts = () => {
             />
           ))
         ) : !loading ? (
-          /* 10.8 — Empty state */
-          <div className="p-8 text-center glass-card rounded-2xl border border-slate-800 text-xs text-slate-400">
+          <div className="p-8 text-center glass-card rounded-2xl border border-[#E8DEC9] text-xs text-[#8C7D70]">
             No suspicious transactions found for selected filter tab.
           </div>
         ) : null}
@@ -190,3 +186,4 @@ export const Alerts = () => {
 };
 
 export default Alerts;
+

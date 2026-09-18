@@ -11,64 +11,92 @@ import {
   Settings as SettingsIcon, 
   HelpCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ChevronDown,
+  Layers,
+  Sparkles,
+  Search
 } from 'lucide-react';
 
 export const Sidebar = ({ activeTab, setActiveTab, alertCount = 8 }) => {
   const [collapsed, setCollapsed] = useState(false);
 
-  const mainNav = [
+  const monitorNav = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'transactions', label: 'Transactions', icon: ArrowLeftRight },
     { id: 'behaviour', label: 'Behaviour Analysis', icon: Activity },
-    { id: 'risk-monitor', label: 'Risk Monitor', icon: Eye },
-    { id: 'alerts', label: 'Alerts', icon: Bell, badge: `🔴 ${alertCount}`, badgeStyle: 'bg-rose-500/20 text-rose-400 border-rose-500/30' },
+    { id: 'risk-monitor', label: 'Risk Monitor', icon: Eye, statusDot: 'bg-[#3B7A57]' },
+    { id: 'alerts', label: 'Alerts', icon: Bell, badge: `🔴 ${alertCount}`, badgeStyle: 'bg-[#FDF0ED] text-[#C94A29] border-[#F4C5B9]' },
     { id: 'users', label: 'Users', icon: UsersIcon },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   ];
 
-  const secondaryNav = [
+  const modelNav = [
+    { id: 'risk-monitor', label: 'fraud-detector-v3', isModel: true, status: 'ALERTING', statusDot: 'bg-[#C94A29]' },
+    { id: 'behaviour', label: 'churn-predictor-v2', isModel: true, status: 'HEALTHY', statusDot: 'bg-[#3B7A57]' },
+    { id: 'overview', label: 'reco-engine-v1', isModel: true, status: 'HEALTHY', statusDot: 'bg-[#3B7A57]' },
+  ];
+
+  const platformNav = [
     { id: 'settings', label: 'Settings', icon: SettingsIcon },
-    { id: 'help', label: 'Help', icon: HelpCircle },
+    { id: 'help', label: 'Help & Docs', icon: HelpCircle },
   ];
 
   return (
     <aside 
-      className={`glass-panel h-screen border-r border-slate-800/80 flex flex-col justify-between p-4 sticky top-0 z-30 transition-all duration-300 select-none ${
+      className={`glass-panel h-screen border-r border-[#E8DEC9] flex flex-col justify-between p-3.5 sticky top-0 z-30 transition-all duration-300 select-none bg-[#FFFDF9]/95 text-[#3D3328] ${
         collapsed ? 'w-20' : 'w-64'
       }`}
     >
-      <div>
-        {/* Branding & Collapse Toggle */}
-        <div className="flex items-center justify-between px-2 py-3 mb-6 border-b border-slate-800/80">
-          <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shrink-0 shadow-glow-cyan">
-              <ShieldAlert className="w-5 h-5 text-slate-950 font-extrabold" />
+      <div className="space-y-4 overflow-y-auto pr-0.5">
+        {/* Workspace Brand & Selector Header */}
+        <div className="px-1 py-1.5 border-b border-[#EFE6D7] space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#3E3128] to-[#B58A43] flex items-center justify-center shrink-0 shadow-glow-warm">
+                <ShieldAlert className="w-4 h-4 text-white font-extrabold" />
+              </div>
+              {!collapsed && (
+                <div className="flex items-center gap-1.5">
+                  <span className="font-extrabold text-sm tracking-tight text-[#231B12] whitespace-nowrap">
+                    FRAUDGUARD <span className="text-[#B58A43]">AI</span>
+                  </span>
+                  <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#EFE7DA] text-[#6E5C44] border border-[#DFD4BD]">
+                    v2.4
+                  </span>
+                </div>
+              )}
             </div>
-            {!collapsed && (
-              <span className="font-extrabold text-sm tracking-wider text-white whitespace-nowrap">
-                FRAUDGUARD <span className="text-cyan-400">AI</span>
-              </span>
-            )}
+
+            <button 
+              onClick={() => setCollapsed(!collapsed)}
+              className="p-1.5 rounded-lg bg-[#EFE7DA] text-[#6E5C44] hover:text-[#231B12] hover:bg-[#DFD4BD] border border-[#DFD4BD] shrink-0 transition-colors"
+              title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+            >
+              {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
+            </button>
           </div>
 
-          <button 
-            onClick={() => setCollapsed(!collapsed)}
-            className="p-1.5 rounded-lg glass-card text-slate-400 hover:text-white border border-slate-800 shrink-0"
-            title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-          >
-            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-          </button>
-        </div>
-
-        {/* Main Navigation */}
-        <nav className="space-y-1.5">
+          {/* Project Dropdown Selector (Orbit Inspired) */}
           {!collapsed && (
-            <div className="px-3 mb-2 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
-              Main Menu
+            <div className="flex items-center justify-between p-2 rounded-xl bg-[#FAF5EA] border border-[#E6DEC8] text-xs font-semibold text-[#34291D] cursor-pointer hover:border-[#B58A43] transition-colors">
+              <div className="flex items-center gap-2 truncate">
+                <Layers className="w-3.5 h-3.5 text-[#B58A43]" />
+                <span className="truncate">Finova AI Workspace</span>
+              </div>
+              <span className="text-[10px] font-mono bg-[#B58A43]/15 text-[#966E31] px-1.5 py-0.5 rounded font-bold uppercase">Pro</span>
             </div>
           )}
-          {mainNav.map((item) => {
+        </div>
+
+        {/* SECTION 1: MONITOR */}
+        <nav className="space-y-1">
+          {!collapsed && (
+            <div className="px-2.5 my-1 text-[10px] font-bold text-[#8A7A68] uppercase tracking-wider">
+              Monitor
+            </div>
+          )}
+          {monitorNav.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
             return (
@@ -76,14 +104,14 @@ export const Sidebar = ({ activeTab, setActiveTab, alertCount = 8 }) => {
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
                 title={collapsed ? item.label : undefined}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 group ${
                   isActive 
-                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-glow-cyan/20' 
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 border border-transparent'
+                    ? 'bg-[#3E3128] text-white shadow-sm' 
+                    : 'text-[#4D3E2D] hover:text-[#231B12] hover:bg-[#EFE7DA] border border-transparent'
                 }`}
               >
-                <div className="flex items-center gap-3.5">
-                  <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'}`} />
+                <div className="flex items-center gap-3">
+                  <Icon className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-[#DCBC79]' : 'text-[#6E5C44] group-hover:text-[#231B12]'}`} />
                   {!collapsed && <span className="truncate">{item.label}</span>}
                 </div>
 
@@ -97,42 +125,48 @@ export const Sidebar = ({ activeTab, setActiveTab, alertCount = 8 }) => {
           })}
         </nav>
 
-        {/* Divider ──────────── */}
-        <div className="my-4 border-t border-slate-800/80"></div>
-
-        {/* Secondary Navigation */}
-        <nav className="space-y-1.5">
-          {secondaryNav.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                title={collapsed ? item.label : undefined}
-                className={`w-full flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group ${
-                  isActive 
-                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' 
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 border border-transparent'
-                }`}
-              >
-                <Icon className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-slate-200" />
-                {!collapsed && <span className="truncate">{item.label}</span>}
-              </button>
-            );
-          })}
-        </nav>
+        {/* SECTION 3: PLATFORM */}
+        <div className="pt-2 border-t border-[#EFE6D7]">
+          {!collapsed && (
+            <div className="px-2.5 my-1 text-[10px] font-bold text-[#8A7A68] uppercase tracking-wider">
+              Platform
+            </div>
+          )}
+          <nav className="space-y-1">
+            {platformNav.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  title={collapsed ? item.label : undefined}
+                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 group ${
+                    isActive 
+                      ? 'bg-[#3E3128] text-white' 
+                      : 'text-[#4D3E2D] hover:text-[#231B12] hover:bg-[#EFE7DA] border border-transparent'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 shrink-0 text-[#6E5C44] group-hover:text-[#231B12]" />
+                  {!collapsed && <span className="truncate">{item.label}</span>}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
       </div>
 
-      {/* User Profile Avatar at Bottom */}
+      {/* User Profile Footer (Orbit & NexaPay Style) */}
       {!collapsed && (
-        <div className="pt-4 border-t border-slate-800/80 flex items-center gap-3 px-2">
-          <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-cyan-400 border border-slate-700 text-xs shrink-0">
-            FG
-          </div>
-          <div className="min-w-0">
-            <p className="text-xs font-bold text-white truncate">Security Lead</p>
-            <p className="text-[10px] text-slate-400 truncate">analyst@fraudguard.ai</p>
+        <div className="pt-3 border-t border-[#EFE6D7] flex items-center justify-between px-1">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#3D3328] to-[#5C4E3E] flex items-center justify-center font-bold text-white border border-[#3D3328] text-xs shrink-0 shadow-sm">
+              MC
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-[#251E17] truncate leading-tight">Marcus Chen</p>
+              <p className="text-[10px] text-[#8C7D70] truncate">marcus@finova.ai</p>
+            </div>
           </div>
         </div>
       )}
@@ -141,3 +175,4 @@ export const Sidebar = ({ activeTab, setActiveTab, alertCount = 8 }) => {
 };
 
 export default Sidebar;
+

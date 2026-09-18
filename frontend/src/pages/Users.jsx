@@ -11,34 +11,34 @@ export const Users = () => {
   ];
 
   return (
-    <div className="space-y-6 pb-8">
-      <div className="p-5 rounded-2xl glass-card border border-slate-800 flex items-center justify-between">
+    <div className="space-y-6 pb-8 text-[#3D3328]">
+      <div className="p-5 rounded-2xl glass-card border border-[#E8DEC9] flex items-center justify-between bg-[#FFFDF9]">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+          <div className="p-2.5 rounded-xl bg-[#FAF0EB] text-[#D96B43] border border-[#E67B5E]/30">
             <UsersIcon className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Customer Risk Profiling</h1>
-            <p className="text-xs text-slate-400">Individual user risk ratings and behavioral trust scores.</p>
+            <h1 className="text-xl font-extrabold text-[#251E17] tracking-tight">Customer Risk Profiling</h1>
+            <p className="text-xs text-[#7F6F59]">Individual user risk ratings and behavioral trust scores.</p>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {mockUsersList.map((usr) => (
-          <div key={usr.email} className="glass-card p-5 rounded-2xl border border-slate-800 flex items-center justify-between">
+          <div key={usr.email} className="glass-card p-5 rounded-2xl border border-[#E8DEC9] flex items-center justify-between bg-[#FFFDF9]">
             <div className="flex items-center gap-3">
-              <img src={usr.avatar} alt={usr.name} className="w-12 h-12 rounded-2xl object-cover border border-slate-700" />
+              <img src={usr.avatar} alt={usr.name} className="w-12 h-12 rounded-2xl object-cover border border-[#E1D5C2] shadow-sm" />
               <div>
-                <h3 className="font-bold text-white text-sm">{usr.name}</h3>
-                <p className="text-xs text-slate-400">{usr.email}</p>
-                <span className="text-[10px] text-slate-500 font-mono">{usr.country}</span>
+                <h3 className="font-extrabold text-[#251E17] text-sm">{usr.name}</h3>
+                <p className="text-xs text-[#7F6F59]">{usr.email}</p>
+                <span className="text-[10px] text-[#8C7D70] font-mono font-semibold">{usr.country}</span>
               </div>
             </div>
 
             <div className="text-right space-y-1">
-              <div className="text-xs text-slate-400">Trust Score</div>
-              <div className={`font-mono font-bold text-lg ${usr.riskTier === 'CRITICAL' ? 'text-rose-400' : 'text-emerald-400'}`}>
+              <div className="text-xs text-[#7F6F59] font-bold">Trust Score</div>
+              <div className={`font-mono font-extrabold text-lg ${usr.riskTier === 'CRITICAL' ? 'text-[#C94A29]' : 'text-[#3B7A57]'}`}>
                 {usr.trustScore}
               </div>
               <RiskBadge status={usr.riskTier === 'CRITICAL' ? 'Flagged' : 'Approved'} />
@@ -51,3 +51,4 @@ export const Users = () => {
 };
 
 export default Users;
+

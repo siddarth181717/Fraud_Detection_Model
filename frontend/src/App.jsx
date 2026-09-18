@@ -7,6 +7,7 @@ import BehaviourAnalysis from './pages/BehaviourAnalysis';
 import RiskMonitor from './pages/RiskMonitor';
 import Alerts from './pages/Alerts';
 import Users from './pages/Users';
+import FloatingAIBot from './components/FloatingAIBot';
 
 export function App() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -25,9 +26,21 @@ export function App() {
     ]);
   };
 
+  const handleAIQuerySelect = (prompt) => {
+    if (prompt.action === 'GO_OVERVIEW') {
+      setActiveTab('overview');
+    } else if (prompt.action === 'HIGH_ALERTS') {
+      setActiveTab('alerts');
+    } else if (prompt.action === 'AMOUNT_50K' || prompt.action === 'LOCATION_ANOMALY') {
+      setActiveTab('transactions');
+    } else {
+      setActiveTab('risk-monitor');
+    }
+  };
+
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500 selection:text-slate-950">
-      {/* Sidebar Navigation with dynamic Alert Counter */}
+    <div className="flex min-h-screen bg-[#FAF7F2] text-[#3D3328] font-sans selection:bg-[#D96B43] selection:text-white relative">
+      {/* Sidebar Navigation */}
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} alertCount={alertCount} />
 
       {/* Main Content Workspace */}
@@ -37,7 +50,7 @@ export function App() {
           notifications={notifications}
         />
 
-        <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto pb-24">
           {activeTab === 'overview' && <Dashboard />}
           {activeTab === 'transactions' && <Transactions />}
           {activeTab === 'behaviour' && <BehaviourAnalysis />}
@@ -45,15 +58,19 @@ export function App() {
           {activeTab === 'alerts' && <Alerts />}
           {activeTab === 'users' && <Users />}
           {['analytics', 'settings', 'help'].includes(activeTab) && (
-            <div className="p-8 text-center glass-card rounded-2xl border border-slate-800">
-              <h2 className="text-xl font-bold text-white capitalize">{activeTab.replace('-', ' ')} View</h2>
-              <p className="text-xs text-slate-400 mt-2">Module active and ready for ML backend connection.</p>
+            <div className="p-10 text-center glass-card rounded-2xl border border-[#E8DEC9]">
+              <h2 className="text-xl font-extrabold text-[#251E17] capitalize">{activeTab.replace('-', ' ')} View</h2>
+              <p className="text-xs text-[#7F6F59] mt-2">Module active and connected with FraudGuard ML engine.</p>
             </div>
           )}
         </main>
       </div>
+
+      {/* Floating AI Query Assistant Widget (NexaPay Inspired) */}
+      <FloatingAIBot onQuerySelect={handleAIQuerySelect} activeTab={activeTab} />
     </div>
   );
 }
 
 export default App;
+

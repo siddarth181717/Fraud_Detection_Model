@@ -35,27 +35,27 @@ export const BehaviourAnalysis = () => {
   }, [selectedUser]);
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-6 pb-8 text-[#3D3328]">
       {/* Header Banner & User Selector */}
-      <div className="p-6 rounded-2xl glass-card border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-6 rounded-2xl glass-card border border-[#E8DEC9] flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#FFFDF9]">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <Activity className="w-5 h-5 text-cyan-400 animate-pulse" />
+          <h1 className="text-xl font-extrabold text-[#251E17] tracking-tight flex items-center gap-2">
+            <Activity className="w-5 h-5 text-[#D96B43] animate-pulse" />
             BEHAVIOUR INTELLIGENCE
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-[#7F6F59] mt-0.5">
             Monitor how user behaviour changes over time and identify anomalies.
           </p>
         </div>
 
         {/* User Dropdown Selector */}
-        <div className="flex items-center gap-2 bg-slate-900/90 p-2 rounded-xl border border-slate-800 text-xs">
-          <UserCheck className="w-4 h-4 text-cyan-400" />
-          <span className="text-slate-400 font-semibold">User:</span>
+        <div className="flex items-center gap-2 bg-[#F5EFE4] p-2 rounded-xl border border-[#E1D5C2] text-xs">
+          <UserCheck className="w-4 h-4 text-[#D96B43]" />
+          <span className="text-[#7F6F59] font-bold">User:</span>
           <select
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
-            className="glass-input text-xs font-mono font-bold rounded-lg px-3 py-1.5 border border-slate-800 focus:border-cyan-500 text-cyan-300 bg-slate-900 cursor-pointer"
+            className="glass-input text-xs font-mono font-bold rounded-lg px-3 py-1.5 border border-[#E1D5C2] focus:border-[#D96B43] text-[#251E17] bg-[#FAF7F2] cursor-pointer"
           >
             <option value="U1842">U1842 (High Risk Spike)</option>
             <option value="U1024">U1024 (Normal Activity)</option>
@@ -64,19 +64,17 @@ export const BehaviourAnalysis = () => {
         </div>
       </div>
 
-      {/* Loading state */}
       {loading && (
-        <div className="p-3 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 text-xs flex items-center justify-center gap-2 font-mono">
-          <RefreshCw className="w-4 h-4 animate-spin" />
+        <div className="p-3.5 rounded-2xl bg-[#FAF0EB] border border-[#E67B5E]/30 text-[#C5542E] text-xs flex items-center justify-center gap-2 font-mono font-medium">
+          <RefreshCw className="w-4 h-4 animate-spin text-[#D96B43]" />
           Fetching User Behaviour Profile from FastAPI/Supabase...
         </div>
       )}
 
-      {/* Error state */}
       {error && (
-        <div className="p-3 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs flex items-center justify-between">
+        <div className="p-3.5 rounded-2xl bg-[#FDF7EA] border border-[#F5E2B8] text-[#8A5608] text-xs flex items-center justify-between">
           <span className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4" />
+            <AlertCircle className="w-4 h-4 text-[#8A5608]" />
             {error}
           </span>
         </div>
@@ -95,3 +93,4 @@ export const BehaviourAnalysis = () => {
 };
 
 export default BehaviourAnalysis;
+

@@ -65,13 +65,13 @@ export const TransactionDetails = ({ transaction, onClose }) => {
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
-      <div className="glass-panel w-full max-w-3xl rounded-2xl border border-slate-800 shadow-2xl p-6 relative max-h-[90vh] overflow-y-auto space-y-6 my-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-warm-900/60 backdrop-blur-md overflow-y-auto">
+      <div className="glass-panel w-full max-w-3xl rounded-2xl border border-warm-200/80 shadow-2xl p-6 relative max-h-[90vh] overflow-y-auto space-y-6 my-auto bg-warmCard border-cream-200/60 text-warm-900">
         
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl bg-slate-800/80 text-slate-400 hover:text-white transition-colors border border-slate-700/50"
+          className="absolute top-5 right-5 p-2 rounded-xl bg-warm-100/80 text-warm-600 hover:text-warm-900 hover:bg-warm-200/80 transition-colors border border-warm-200/80"
         >
           <X className="w-5 h-5" />
         </button>
@@ -79,40 +79,40 @@ export const TransactionDetails = ({ transaction, onClose }) => {
         {/* Modal Header */}
         <div className="flex items-center gap-3">
           <div className={`p-3 rounded-xl border ${
-            isHighRisk ? 'bg-rose-500/10 text-rose-400 border-rose-500/30' : isMediumRisk ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+            isHighRisk ? 'bg-rose-50 text-rose-700 border-rose-200/80' : isMediumRisk ? 'bg-amber-50 text-amber-800 border-amber-200/80' : 'bg-emerald-50 text-emerald-700 border-emerald-200/80'
           }`}>
             <ShieldAlert className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold text-cyan-400">{transaction.id || transaction.transaction_id || 'TX1001'}</span>
-              <span className="text-xs text-slate-500">• User {transaction.user || transaction.user_id || 'U1842'}</span>
+              <span className="text-xs font-mono font-bold text-terracotta">{transaction.id || transaction.transaction_id || 'TX1001'}</span>
+              <span className="text-xs text-warm-500">• User {transaction.user || transaction.user_id || 'U1842'}</span>
             </div>
-            <h2 className="text-xl font-bold text-white tracking-tight">Behavioural Risk Analysis</h2>
+            <h2 className="text-xl font-bold text-warm-900 tracking-tight">Behavioural Risk Analysis</h2>
           </div>
         </div>
 
         {/* 10.1 — BEHAVIOURAL RISK ANALYSIS & SCORE */}
-        <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-5">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Activity className="w-4 h-4 text-cyan-400" />
+        <div className="p-5 rounded-2xl bg-cream-50/80 border border-warm-200/80 space-y-5">
+          <div className="flex items-center justify-between border-b border-warm-200/80 pb-3">
+            <h3 className="text-xs font-bold text-warm-600 uppercase tracking-wider flex items-center gap-1.5">
+              <Activity className="w-4 h-4 text-terracotta" />
               BEHAVIOURAL RISK ANALYSIS
             </h3>
-            <span className="text-[10px] text-slate-500 font-mono">Model Engine: Random Forest</span>
+            <span className="text-[10px] text-warm-500 font-mono">Model Engine: Random Forest</span>
           </div>
 
           {/* Deviation Progress Bars */}
           <div className="space-y-3 font-mono text-xs">
             {/* Amount Deviation */}
             <div className="space-y-1">
-              <div className="flex justify-between items-center text-slate-300">
-                <span className="font-sans font-medium text-slate-300">Amount Deviation</span>
-                <span className={`font-bold ${amountDevPct > 50 ? 'text-rose-400' : 'text-slate-400'}`}>{amountDevPct}%</span>
+              <div className="flex justify-between items-center text-warm-800">
+                <span className="font-sans font-medium text-warm-800">Amount Deviation</span>
+                <span className={`font-bold ${amountDevPct > 50 ? 'text-rose-600' : 'text-warm-600'}`}>{amountDevPct}%</span>
               </div>
-              <div className="h-2.5 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+              <div className="h-2.5 w-full bg-cream-200/60 rounded-full overflow-hidden border border-cream-300">
                 <div 
-                  className={`h-full transition-all duration-700 rounded-full ${amountDevPct > 70 ? 'bg-rose-500' : amountDevPct > 40 ? 'bg-amber-500' : 'bg-cyan-500'}`} 
+                  className={`h-full transition-all duration-700 rounded-full ${amountDevPct > 70 ? 'bg-rose-500' : amountDevPct > 40 ? 'bg-amber-500' : 'bg-terracotta'}`} 
                   style={{ width: `${Math.min(amountDevPct, 100)}%` }}
                 />
               </div>
@@ -120,13 +120,13 @@ export const TransactionDetails = ({ transaction, onClose }) => {
 
             {/* Time Deviation */}
             <div className="space-y-1">
-              <div className="flex justify-between items-center text-slate-300">
-                <span className="font-sans font-medium text-slate-300">Time Deviation</span>
-                <span className={`font-bold ${timeDevPct > 50 ? 'text-rose-400' : 'text-slate-400'}`}>{timeDevPct}%</span>
+              <div className="flex justify-between items-center text-warm-800">
+                <span className="font-sans font-medium text-warm-800">Time Deviation</span>
+                <span className={`font-bold ${timeDevPct > 50 ? 'text-rose-600' : 'text-warm-600'}`}>{timeDevPct}%</span>
               </div>
-              <div className="h-2.5 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+              <div className="h-2.5 w-full bg-cream-200/60 rounded-full overflow-hidden border border-cream-300">
                 <div 
-                  className={`h-full transition-all duration-700 rounded-full ${timeDevPct > 70 ? 'bg-rose-500' : timeDevPct > 40 ? 'bg-amber-500' : 'bg-cyan-500'}`} 
+                  className={`h-full transition-all duration-700 rounded-full ${timeDevPct > 70 ? 'bg-rose-500' : timeDevPct > 40 ? 'bg-amber-500' : 'bg-terracotta'}`} 
                   style={{ width: `${Math.min(timeDevPct, 100)}%` }}
                 />
               </div>
@@ -134,13 +134,13 @@ export const TransactionDetails = ({ transaction, onClose }) => {
 
             {/* Location Deviation */}
             <div className="space-y-1">
-              <div className="flex justify-between items-center text-slate-300">
-                <span className="font-sans font-medium text-slate-300">Location Deviation</span>
-                <span className={`font-bold ${locationDevPct > 50 ? 'text-rose-400' : 'text-slate-400'}`}>{locationDevPct}%</span>
+              <div className="flex justify-between items-center text-warm-800">
+                <span className="font-sans font-medium text-warm-800">Location Deviation</span>
+                <span className={`font-bold ${locationDevPct > 50 ? 'text-rose-600' : 'text-warm-600'}`}>{locationDevPct}%</span>
               </div>
-              <div className="h-2.5 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+              <div className="h-2.5 w-full bg-cream-200/60 rounded-full overflow-hidden border border-cream-300">
                 <div 
-                  className={`h-full transition-all duration-700 rounded-full ${locationDevPct > 70 ? 'bg-rose-500' : locationDevPct > 40 ? 'bg-amber-500' : 'bg-cyan-500'}`} 
+                  className={`h-full transition-all duration-700 rounded-full ${locationDevPct > 70 ? 'bg-rose-500' : locationDevPct > 40 ? 'bg-amber-500' : 'bg-terracotta'}`} 
                   style={{ width: `${Math.min(locationDevPct, 100)}%` }}
                 />
               </div>
@@ -148,13 +148,13 @@ export const TransactionDetails = ({ transaction, onClose }) => {
 
             {/* Device Change */}
             <div className="space-y-1">
-              <div className="flex justify-between items-center text-slate-300">
-                <span className="font-sans font-medium text-slate-300">Device Change</span>
-                <span className={`font-bold ${deviceDevPct > 50 ? 'text-rose-400' : 'text-slate-400'}`}>{deviceDevPct}%</span>
+              <div className="flex justify-between items-center text-warm-800">
+                <span className="font-sans font-medium text-warm-800">Device Change</span>
+                <span className={`font-bold ${deviceDevPct > 50 ? 'text-rose-600' : 'text-warm-600'}`}>{deviceDevPct}%</span>
               </div>
-              <div className="h-2.5 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+              <div className="h-2.5 w-full bg-cream-200/60 rounded-full overflow-hidden border border-cream-300">
                 <div 
-                  className={`h-full transition-all duration-700 rounded-full ${deviceDevPct > 70 ? 'bg-rose-500' : deviceDevPct > 40 ? 'bg-amber-500' : 'bg-cyan-500'}`} 
+                  className={`h-full transition-all duration-700 rounded-full ${deviceDevPct > 70 ? 'bg-rose-500' : deviceDevPct > 40 ? 'bg-amber-500' : 'bg-terracotta'}`} 
                   style={{ width: `${Math.min(deviceDevPct, 100)}%` }}
                 />
               </div>
@@ -162,13 +162,13 @@ export const TransactionDetails = ({ transaction, onClose }) => {
 
             {/* Frequency Deviation */}
             <div className="space-y-1">
-              <div className="flex justify-between items-center text-slate-300">
-                <span className="font-sans font-medium text-slate-300">Frequency Deviation</span>
-                <span className="font-bold text-slate-400">{freqDevPct}%</span>
+              <div className="flex justify-between items-center text-warm-800">
+                <span className="font-sans font-medium text-warm-800">Frequency Deviation</span>
+                <span className="font-bold text-warm-600">{freqDevPct}%</span>
               </div>
-              <div className="h-2.5 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+              <div className="h-2.5 w-full bg-cream-200/60 rounded-full overflow-hidden border border-cream-300">
                 <div 
-                  className="h-full transition-all duration-700 rounded-full bg-cyan-500" 
+                  className="h-full transition-all duration-700 rounded-full bg-terracotta" 
                   style={{ width: `${Math.min(freqDevPct, 100)}%` }}
                 />
               </div>
@@ -177,35 +177,35 @@ export const TransactionDetails = ({ transaction, onClose }) => {
 
           {/* OVERALL RISK SCORE BANNER */}
           <div className={`p-4 rounded-xl border flex flex-col sm:flex-row items-center justify-between gap-4 ${
-            isHighRisk ? 'bg-rose-500/10 border-rose-500/30' : isMediumRisk ? 'bg-amber-500/10 border-amber-500/30' : 'bg-emerald-500/10 border-emerald-500/30'
+            isHighRisk ? 'bg-rose-50 border-rose-200/80' : isMediumRisk ? 'bg-amber-50 border-amber-200/80' : 'bg-emerald-50 border-emerald-200/80'
           }`}>
             <div>
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">OVERALL RISK SCORE</span>
+              <span className="text-[10px] uppercase font-bold text-warm-500 tracking-wider block">OVERALL RISK SCORE</span>
               <div className="flex items-baseline gap-2">
-                <span className={`text-4xl font-extrabold font-mono ${isHighRisk ? 'text-rose-400' : isMediumRisk ? 'text-amber-400' : 'text-emerald-400'}`}>
-                  {riskScore} <span className="text-base text-slate-400 font-normal">/ 100</span>
+                <span className={`text-4xl font-extrabold font-mono ${isHighRisk ? 'text-rose-700' : isMediumRisk ? 'text-amber-800' : 'text-emerald-700'}`}>
+                  {riskScore} <span className="text-base text-warm-500 font-normal">/ 100</span>
                 </span>
                 <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                  isHighRisk ? 'bg-rose-500 text-slate-950' : isMediumRisk ? 'bg-amber-500 text-slate-950' : 'bg-emerald-500 text-slate-950'
+                  isHighRisk ? 'bg-rose-600 text-white' : isMediumRisk ? 'bg-amber-600 text-white' : 'bg-emerald-700 text-white'
                 }`}>
                   {riskLevel} RISK
                 </span>
               </div>
             </div>
 
-            {/* Risk Scale Indicator (3. Milestone 9 / 10 score understanding) */}
-            <div className="text-right text-[11px] font-mono text-slate-400 space-y-1 w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-slate-800 pt-2 sm:pt-0 sm:pl-4">
+            {/* Risk Scale Indicator */}
+            <div className="text-right text-[11px] font-mono text-warm-600 space-y-1 w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-warm-200/80 pt-2 sm:pt-0 sm:pl-4">
               <div className="flex items-center justify-between sm:justify-end gap-3">
-                <span className="text-emerald-400">Low (0-30)</span>
-                <span className="text-slate-500">Normal behaviour</span>
+                <span className="text-emerald-700 font-bold">Low (0-30)</span>
+                <span className="text-warm-500">Normal behaviour</span>
               </div>
               <div className="flex items-center justify-between sm:justify-end gap-3">
-                <span className="text-amber-400">Medium (31-70)</span>
-                <span className="text-slate-500">Some unusual behaviour</span>
+                <span className="text-amber-800 font-bold">Medium (31-70)</span>
+                <span className="text-warm-500">Some unusual behaviour</span>
               </div>
               <div className="flex items-center justify-between sm:justify-end gap-3">
-                <span className="text-rose-400">High (71-100)</span>
-                <span className="text-slate-500">Strong deviation</span>
+                <span className="text-rose-700 font-bold">High (71-100)</span>
+                <span className="text-warm-500">Strong deviation</span>
               </div>
             </div>
           </div>
@@ -213,8 +213,8 @@ export const TransactionDetails = ({ transaction, onClose }) => {
 
         {/* 10.2 — WHY WAS THIS TRANSACTION FLAGGED? */}
         <div className="space-y-3">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-            <AlertTriangle className="w-4 h-4 text-amber-400" />
+          <h3 className="text-xs font-bold text-warm-600 uppercase tracking-wider flex items-center gap-1.5">
+            <AlertTriangle className="w-4 h-4 text-amber-600" />
             WHY WAS THIS TRANSACTION FLAGGED?
           </h3>
           <div className="space-y-2">
@@ -225,13 +225,13 @@ export const TransactionDetails = ({ transaction, onClose }) => {
                 <div 
                   key={idx} 
                   className={`p-3.5 rounded-xl border text-xs flex items-start gap-3 ${
-                    isCrit ? 'bg-rose-500/10 border-rose-500/20 text-rose-200' : isWarn ? 'bg-amber-500/10 border-amber-500/20 text-amber-200' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
+                    isCrit ? 'bg-rose-50/80 border-rose-200/80 text-rose-900' : isWarn ? 'bg-amber-50/80 border-amber-200/80 text-amber-900' : 'bg-emerald-50/80 border-emerald-200/80 text-emerald-900'
                   }`}
                 >
                   <span className="text-sm mt-0.5">{isCrit ? '⚠' : isWarn ? '⚠' : '✓'}</span>
                   <div>
-                    <h4 className="font-bold text-white text-xs">{r.title || r}</h4>
-                    {r.desc && <p className="text-slate-400 text-[11px] mt-0.5 leading-relaxed">{r.desc}</p>}
+                    <h4 className="font-bold text-warm-900 text-xs">{r.title || r}</h4>
+                    {r.desc && <p className="text-warm-600 text-[11px] mt-0.5 leading-relaxed">{r.desc}</p>}
                   </div>
                 </div>
               );
@@ -242,59 +242,59 @@ export const TransactionDetails = ({ transaction, onClose }) => {
         {/* 10.3 — TRANSACTION vs USER NORMAL BEHAVIOUR */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* TRANSACTION Details */}
-          <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3">
-            <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+          <div className="p-4 rounded-xl bg-cream-50/80 border border-warm-200/80 space-y-3">
+            <h4 className="text-xs font-bold text-terracotta uppercase tracking-wider flex items-center gap-1.5">
               <CreditCard className="w-3.5 h-3.5" /> TRANSACTION
             </h4>
             <div className="grid grid-cols-2 gap-2.5 text-xs">
               <div>
-                <span className="text-slate-500 text-[10px] block font-semibold">Transaction ID</span>
-                <span className="font-mono font-bold text-white">{transaction.id || transaction.transaction_id || 'TX1001'}</span>
+                <span className="text-warm-500 text-[10px] block font-semibold">Transaction ID</span>
+                <span className="font-mono font-bold text-warm-900">{transaction.id || transaction.transaction_id || 'TX1001'}</span>
               </div>
               <div>
-                <span className="text-slate-500 text-[10px] block font-semibold">User ID</span>
-                <span className="font-mono font-bold text-white">{transaction.user || transaction.user_id || 'U1842'}</span>
+                <span className="text-warm-500 text-[10px] block font-semibold">User ID</span>
+                <span className="font-mono font-bold text-warm-900">{transaction.user || transaction.user_id || 'U1842'}</span>
               </div>
               <div>
-                <span className="text-slate-500 text-[10px] block font-semibold">Amount</span>
-                <span className="font-mono font-bold text-emerald-400">{transaction.amount || `₹${(transaction.amountNum || 48500).toLocaleString()}`}</span>
+                <span className="text-warm-500 text-[10px] block font-semibold">Amount</span>
+                <span className="font-mono font-bold text-emerald-700">{transaction.amount || `₹${(transaction.amountNum || 48500).toLocaleString()}`}</span>
               </div>
               <div>
-                <span className="text-slate-500 text-[10px] block font-semibold">Time</span>
-                <span className="font-mono text-slate-200">{transaction.time || '03:17 AM'}</span>
+                <span className="text-warm-500 text-[10px] block font-semibold">Time</span>
+                <span className="font-mono text-warm-800">{transaction.time || '03:17 AM'}</span>
               </div>
               <div>
-                <span className="text-slate-500 text-[10px] block font-semibold">Location</span>
-                <span className="text-slate-200">{transaction.location || 'Mumbai'}</span>
+                <span className="text-warm-500 text-[10px] block font-semibold">Location</span>
+                <span className="text-warm-800">{transaction.location || 'Mumbai'}</span>
               </div>
               <div>
-                <span className="text-slate-500 text-[10px] block font-semibold">Device</span>
-                <span className="text-slate-200">{transaction.device || 'New Device'}</span>
+                <span className="text-warm-500 text-[10px] block font-semibold">Device</span>
+                <span className="text-warm-800">{transaction.device || 'New Device'}</span>
               </div>
             </div>
           </div>
 
           {/* USER'S NORMAL BEHAVIOUR */}
-          <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3">
-            <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+          <div className="p-4 rounded-xl bg-cream-50/80 border border-warm-200/80 space-y-3">
+            <h4 className="text-xs font-bold text-warm-700 uppercase tracking-wider flex items-center gap-1.5">
               <User className="w-3.5 h-3.5" /> USER'S NORMAL BEHAVIOUR
             </h4>
             <div className="grid grid-cols-2 gap-2.5 text-xs">
               <div>
-                <span className="text-slate-500 text-[10px] block font-semibold">Average transaction</span>
-                <span className="font-mono font-bold text-slate-200">{normalAmt}</span>
+                <span className="text-warm-500 text-[10px] block font-semibold">Average transaction</span>
+                <span className="font-mono font-bold text-warm-800">{normalAmt}</span>
               </div>
               <div>
-                <span className="text-slate-500 text-[10px] block font-semibold">Typical time</span>
-                <span className="font-mono text-slate-200">{normalTime}</span>
+                <span className="text-warm-500 text-[10px] block font-semibold">Typical time</span>
+                <span className="font-mono text-warm-800">{normalTime}</span>
               </div>
               <div>
-                <span className="text-slate-500 text-[10px] block font-semibold">Usual location</span>
-                <span className="text-slate-200">{normalLoc}</span>
+                <span className="text-warm-500 text-[10px] block font-semibold">Usual location</span>
+                <span className="text-warm-800">{normalLoc}</span>
               </div>
               <div>
-                <span className="text-slate-500 text-[10px] block font-semibold">Trusted devices</span>
-                <span className="text-slate-200 font-semibold">{normalDev}</span>
+                <span className="text-warm-500 text-[10px] block font-semibold">Trusted devices</span>
+                <span className="text-warm-800 font-semibold">{normalDev}</span>
               </div>
             </div>
           </div>
@@ -302,19 +302,19 @@ export const TransactionDetails = ({ transaction, onClose }) => {
 
         {/* 10.3 — CURRENT vs NORMAL COMPARISON GRID */}
         <div className="space-y-3">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">CURRENT vs NORMAL</h3>
+          <h3 className="text-xs font-bold text-warm-600 uppercase tracking-wider">CURRENT vs NORMAL</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-mono">
             {comparisons.map((c, i) => (
               <div 
                 key={i} 
                 className={`p-3 rounded-xl border flex flex-col justify-between ${
-                  c.is_unusual ? 'bg-rose-500/10 border-rose-500/30' : 'bg-slate-900/60 border-slate-800'
+                  c.is_unusual ? 'bg-rose-50/90 border-rose-200 text-rose-900' : 'bg-cream-50/80 border-warm-200/80 text-warm-900'
                 }`}
               >
-                <span className="text-[10px] font-sans font-semibold text-slate-400 uppercase">{c.metric}</span>
+                <span className="text-[10px] font-sans font-semibold text-warm-500 uppercase">{c.metric}</span>
                 <div className="mt-1">
-                  <span className={`block font-bold text-sm ${c.is_unusual ? 'text-rose-400' : 'text-white'}`}>{c.current}</span>
-                  <span className="text-[10px] text-slate-500 block">vs {c.normal}</span>
+                  <span className={`block font-bold text-sm ${c.is_unusual ? 'text-rose-700' : 'text-warm-900'}`}>{c.current}</span>
+                  <span className="text-[10px] text-warm-500 block">vs {c.normal}</span>
                 </div>
               </div>
             ))}
@@ -322,21 +322,21 @@ export const TransactionDetails = ({ transaction, onClose }) => {
         </div>
 
         {/* 10.7 — AI RISK SUMMARY */}
-        <div className="p-4 rounded-xl bg-cyan-950/20 border border-cyan-500/30 space-y-1.5">
+        <div className="p-4 rounded-xl bg-warm-100/70 border border-warm-300/80 space-y-1.5">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-xs font-bold text-cyan-300 uppercase tracking-wider">AI RISK SUMMARY</h3>
+            <Sparkles className="w-4 h-4 text-terracotta" />
+            <h3 className="text-xs font-bold text-terracotta uppercase tracking-wider">AI RISK SUMMARY</h3>
           </div>
-          <p className="text-xs text-slate-300 leading-relaxed font-sans">
+          <p className="text-xs text-warm-800 leading-relaxed font-sans">
             {aiSummary}
           </p>
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-warm-200/80">
           <button 
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition-colors"
+            className="px-5 py-2 rounded-xl bg-terracotta hover:bg-terracotta-dark text-xs font-bold text-white shadow-md transition-colors"
           >
             Close Details
           </button>
