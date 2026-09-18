@@ -20,17 +20,10 @@ export const Dashboard = () => {
       } else {
         // Fallback default structure matching dataset (2,000 transactions)
         setStats({
-<<<<<<< HEAD
-          totalTransactions: { title: 'Transactions', value: '12,482', change: '+12.4%', isPositive: true, subtext: 'Total processed' },
-          highRiskTransactions: { title: 'High Risk', value: '143', change: '+8.7%', isPositive: false, subtext: 'Flagged anomalies' },
-          avgRisk: { title: 'Avg Risk Index', value: '34.7', change: '-1.8 pts', isPositive: true, subtext: 'System Risk Index' },
-          alerts: { title: 'Pending Alerts', value: '87', change: '+5', isPositive: false, subtext: 'Pending review' }
-=======
           totalTransactions: { title: 'Transactions', value: '2,000', change: '+12.4%', isPositive: true, subtext: 'Total processed' },
           highRiskTransactions: { title: 'High Risk', value: '63', change: '+8.7%', isPositive: false, subtext: 'Flagged anomalies' },
-          avgRisk: { title: 'Avg Risk', value: '10.1', change: '-1.8 pts', isPositive: true, subtext: 'System Risk Index' },
-          alerts: { title: 'Alerts', value: '63', change: '+5', isPositive: false, subtext: 'Pending review' }
->>>>>>> 91c65ae64af9e8d444be0e02820acc80d3fc6b2b
+          avgRisk: { title: 'Avg Risk Index', value: '10.1', change: '-1.8 pts', isPositive: true, subtext: 'System Risk Index' },
+          alerts: { title: 'Pending Alerts', value: '63', change: '+5', isPositive: false, subtext: 'Pending review' }
         });
       }
     } catch (err) {
@@ -60,25 +53,15 @@ export const Dashboard = () => {
       color: 'rose'
     },
     {
-<<<<<<< HEAD
       title: stats.avgRisk?.title || 'Avg Risk Index',
-      value: stats.avgRisk?.value || '34.7',
-=======
-      title: stats.avgRisk?.title || 'Avg Risk',
       value: stats.avgRisk?.value || '10.1',
->>>>>>> 91c65ae64af9e8d444be0e02820acc80d3fc6b2b
       subtext: stats.avgRisk?.subtext || 'System Risk Index',
       isPositive: stats.avgRisk?.isPositive ?? true,
       color: 'amber'
     },
     {
-<<<<<<< HEAD
       title: stats.alerts?.title || 'Pending Alerts',
-      value: stats.alerts?.value || '87',
-=======
-      title: stats.alerts?.title || 'Alerts',
       value: stats.alerts?.value || '63',
->>>>>>> 91c65ae64af9e8d444be0e02820acc80d3fc6b2b
       subtext: stats.alerts?.subtext || 'Pending review',
       isPositive: stats.alerts?.isPositive ?? false,
       color: 'rose'
